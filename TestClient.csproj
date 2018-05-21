@@ -289,6 +289,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ImageColorChanger.cs" />
+    <Compile Include="Assets\Scripts\MouseSelection.cs" />
     <Compile Include="Assets\Scripts\ObjectsController.cs" />
     <Compile Include="Assets\Scripts\ObjectStatusManager.cs" />
   </ItemGroup>

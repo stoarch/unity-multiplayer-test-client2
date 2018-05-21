@@ -16,13 +16,15 @@ public class ObjectStatusManager : MonoBehaviour {
     const float MIN_Z = -6.0f;
     const float MAX_Z = 3.0f;
 
+    const int UNKNOWN_COLOR = -1;
+
     [SerializeField]
     Color _color;
     [SerializeField]
     int _dataSize = MIN_SIZE;
 
     [SerializeField]
-    Material[] _colors;
+    Material[] _colorsMaterials;
 
     byte[] _data;
 
@@ -64,13 +66,42 @@ public class ObjectStatusManager : MonoBehaviour {
 
     private void SetRandomColor()
     {
-        if (_colors.Length == 0)
+        int id = UnityEngine.Random.Range(0, _colorsMaterials.Length);
+        SetColor(id);
+    }
+
+    internal void SetColor(Color selectionColor)
+    {
+        int id = FindColor(selectionColor);
+        if(id == UNKNOWN_COLOR)
+        {
+            Debug.LogWarningFormat("Color {0} not found in object {1}", selectionColor, gameObject);
+            return;
+        }
+
+        SetColor(id); 
+    }
+
+    int FindColor(Color toFind)
+    {
+        for (int i = 0; i < _colorsMaterials.Length; i++)
+        {
+            if (_colorsMaterials[i].color == toFind)
+                return i;
+        }
+
+        return UNKNOWN_COLOR;
+    }
+
+    private void SetColor(int id)
+    {
+        if (_colorsMaterials.Length == 0)
         {
             Debug.LogError("No colors specified to select from");
             return;
         }
         var renderer = gameObject.GetComponent<MeshRenderer>();
-        renderer.material = _colors[UnityEngine.Random.Range(0,_colors.Length)];
+        renderer.material = _colorsMaterials[id];
     }
 
     private void SetRandomTransform()
