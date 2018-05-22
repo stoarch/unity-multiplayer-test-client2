@@ -7,11 +7,18 @@ using UnityEngine.UI;
 public class MouseSelection : MonoBehaviour {
 
     const string OBJECT_TAG = "object";
+    const int MAX_DISTANCE = 20;
 
     [SerializeField]
     Image _uiCursor;
     [SerializeField]
+    RawImage _uiCursorBackup;//if we have no ui cursor
+    [SerializeField]
+    float _detectionRadius = 1.0f;
+    [SerializeField]
     ImageColorChanger _colorChanger;
+
+    public float DetectionRadius { get { return _detectionRadius; } set { _detectionRadius = value; } }
 
 	void Start ()
     {
@@ -30,23 +37,31 @@ public class MouseSelection : MonoBehaviour {
     void Update ()
     {
         var pos = Input.mousePosition;
-        _uiCursor.transform.position = pos;
+        if(_uiCursor != null)
+            _uiCursor.transform.position = pos;
+        else if(_uiCursorBackup != null)
+            _uiCursorBackup.transform.position = pos;
 
-        if (Input.GetMouseButtonDown(0))
+        //if (Input.GetMouseButtonDown(0))
         {
             pos.z = Camera.main.transform.position.z * -1;
 
             var newPos = Camera.main.ScreenToWorldPoint(pos);
 
             Ray ray = Camera.main.ScreenPointToRay(pos);
-            RaycastHit hit = new RaycastHit();
-            Physics.Raycast(ray, out hit, 100);
+            var hits = Physics.SphereCastAll(ray, _detectionRadius, MAX_DISTANCE);
 
-            if (hit.collider != null)
+            if (hits.Length > 0)
             {
-                if (hit.collider.tag == OBJECT_TAG)
+                foreach (var hit in hits)
                 {
-                    ChangeColorFor(hit.collider.gameObject);
+                    if (hit.collider != null)
+                    {
+                        if (hit.collider.tag == OBJECT_TAG)
+                        {
+                            ChangeColorFor(hit.collider.gameObject);
+                        }
+                    }
                 }
             }
         }

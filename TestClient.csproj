@@ -293,6 +293,7 @@
     <Compile Include="Assets\Scripts\MouseSelection.cs" />
     <Compile Include="Assets\Scripts\ObjectsController.cs" />
     <Compile Include="Assets\Scripts\ObjectStatusManager.cs" />
+    <Compile Include="Assets\Scripts\UIScaler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
